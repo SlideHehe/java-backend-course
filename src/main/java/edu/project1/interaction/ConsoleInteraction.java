@@ -1,7 +1,7 @@
 package edu.project1.interaction;
 
-import java.util.Scanner;
 import edu.project1.game.GuessResult;
+import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

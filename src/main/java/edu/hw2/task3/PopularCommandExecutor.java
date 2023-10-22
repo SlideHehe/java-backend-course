@@ -44,7 +44,7 @@ public final class PopularCommandExecutor {
                 return;
             } catch (Exception e) {
                 if (attempts == maxAttempts - 1) {
-                    throw new ConnectionException(e.getMessage(), e.getCause());
+                    throw new ConnectionException(e);
                 }
 
                 attempts++;

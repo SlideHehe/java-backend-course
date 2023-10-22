@@ -15,7 +15,7 @@ public class FaultyConnection implements Connection {
         throwException = !throwException; // Для получения ошибки каждый 2 раз
 
         if (throwException) {
-            throw new ConnectionException("Unsuccessful connection", new ConnectionException());
+            throw new ConnectionException();
         }
 
         LOGGER.info("Command executed");

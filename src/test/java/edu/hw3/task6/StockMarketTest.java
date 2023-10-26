@@ -33,7 +33,7 @@ public class StockMarketTest {
     @ParameterizedTest
     @NullSource
     void nullStocksTest(Stock stock) {
-        TechStockMarket market = new TechStockMarket();
+        StockMarket market = new TechStockMarket();
         assertThatThrownBy(() -> market.add(stock)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> market.remove(stock)).isInstanceOf(NullPointerException.class);
     }
@@ -41,14 +41,32 @@ public class StockMarketTest {
     @DisplayName("Получение mostValuableStock из пустой очереди")
     @Test
     void emptyQueueGetTest() {
-        TechStockMarket market = new TechStockMarket();
+        StockMarket market = new TechStockMarket();
         assertThat(market.mostValuableStock()).isNull();
+    }
+
+    @DisplayName("Проверка удаления элемента из очереди")
+    @Test
+    void removeElementTest() {
+        StockMarket market = new TechStockMarket();
+
+        Stock stock1 = new Stock("Microsoft", 261.12);
+        Stock stock2 = new Stock("Lenovo", 196.59);
+
+        market.add(stock1);
+        market.add(stock2);
+
+        assertThat(market.mostValuableStock()).isEqualTo(stock1);
+
+        market.remove(stock1);
+
+        assertThat(market.mostValuableStock()).isEqualTo(stock2);
     }
 
     @DisplayName("Проверка правильности получения самой дорогой акции")
     @Test
     void mostValuableStockTest() {
-        TechStockMarket market = new TechStockMarket();
+        StockMarket market = new TechStockMarket();
 
         Stock currentMostValuable = new Stock("Microsoft", 261.12);
         market.add(currentMostValuable);

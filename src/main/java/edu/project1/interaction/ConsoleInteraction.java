@@ -6,9 +6,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ConsoleInteraction {
-    private final static Scanner SCANNER = new Scanner(System.in);
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static String SEPARATOR = "------------------------------------------------------";
+    private static final Scanner SCANNER = new Scanner(System.in);
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final String SEPARATOR = "------------------------------------------------------";
 
     private ConsoleInteraction() {
     }

@@ -6,9 +6,10 @@ import edu.project1.words.RandomWords;
 import java.util.Objects;
 
 public class ConsoleHangman {
+    public static final int MAX_MISTAKES = 5;
+
     private static final String EXIT_INPUT = "!q";
     private static final String START_INPUT = "s";
-    public static final int MAX_MISTAKES = 5;
 
     public void run() {
         ConsoleInteraction.printWelcomeInfo();

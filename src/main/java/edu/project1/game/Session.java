@@ -4,15 +4,16 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Session {
-    private final char[] remainingCharacters;
-    private final char[] userAnswer;
-    private final int maxMistakes;
-    private int mistakes;
     private static final char DUMMY_SYMBOL = '_';
     private static final String EXIT_INPUT = "!q";
     private static final int TYPO = 0;
     private static final int SURRENDER = -1;
     private static final int CORRECT_INPUT = 1;
+
+    private final char[] remainingCharacters;
+    private final char[] userAnswer;
+    private final int maxMistakes;
+    private int mistakes;
 
     public Session(String answer, int maxMistakes) {
         if (!validateWord(answer)) {

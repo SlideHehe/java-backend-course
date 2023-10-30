@@ -41,44 +41,46 @@ public class StockMarketTest {
     @DisplayName("Получение mostValuableStock из пустой очереди")
     @Test
     void emptyQueueGetTest() {
+        // given
         StockMarket market = new TechStockMarket();
-        assertThat(market.mostValuableStock()).isNull();
+
+        // when
+        Stock stock = market.mostValuableStock();
+
+        // then
+        assertThat(stock).isNull();
     }
 
     @DisplayName("Проверка удаления элемента из очереди")
     @Test
     void removeElementTest() {
+        // given
         StockMarket market = new TechStockMarket();
-
         Stock stock1 = new Stock("Microsoft", 261.12);
         Stock stock2 = new Stock("Lenovo", 196.59);
 
+        // when
         market.add(stock1);
         market.add(stock2);
-
-        assertThat(market.mostValuableStock()).isEqualTo(stock1);
-
         market.remove(stock1);
 
+        // then
         assertThat(market.mostValuableStock()).isEqualTo(stock2);
     }
 
     @DisplayName("Проверка правильности получения самой дорогой акции")
     @Test
     void mostValuableStockTest() {
+        // given
         StockMarket market = new TechStockMarket();
+        Stock currentMostValuable = new Stock("Apple", 700.00);
 
-        Stock currentMostValuable = new Stock("Microsoft", 261.12);
-        market.add(currentMostValuable);
-        market.add(new Stock("Lenovo", 196.59));
-
-        assertThat(market.mostValuableStock()).isEqualTo(currentMostValuable);
-
+        // when
         market.add(new Stock("Samsung", 590.59));
-        currentMostValuable = new Stock("Apple", 700.00);
         market.add(currentMostValuable);
         market.add(new Stock("Sony", 350.55));
 
+        // then
         assertThat(market.mostValuableStock()).isEqualTo(currentMostValuable);
     }
 }

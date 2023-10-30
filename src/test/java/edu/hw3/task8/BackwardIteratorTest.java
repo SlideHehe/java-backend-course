@@ -28,19 +28,28 @@ public class BackwardIteratorTest {
     @DisplayName("Проверка на создание итератора для пустой коллекции")
     @Test
     void emptyCollectionTest() {
+        // given
         BackwardIterator<Integer> backwardIterator = new BackwardIterator<>(List.of());
 
-        assertThat(backwardIterator.hasNext()).isFalse();
+        // when
+        boolean hasNext = backwardIterator.hasNext();
+
+        // then
+        assertThat(hasNext).isFalse();
     }
 
     @DisplayName("Проверка выхода за границы коллекции")
     @Test
     void outOfBoundsTest() {
+        // given
         BackwardIterator<Integer> backwardIterator = new BackwardIterator<>(List.of(1, 2, 3));
+
+        // when
         backwardIterator.next();
         backwardIterator.next();
         backwardIterator.next();
 
+        // then
         assertThatThrownBy(backwardIterator::next).isInstanceOf(NoSuchElementException.class);
     }
 
@@ -48,10 +57,15 @@ public class BackwardIteratorTest {
     @ParameterizedTest
     @MethodSource("listsProvider")
     void backwardIteratorCheck(List<Integer> list) {
+        // given
         BackwardIterator<Integer> backwardIterator = new BackwardIterator<>(list);
 
         for (int i = list.size() - 1; i >= 0; i--) {
-            assertThat(backwardIterator.next()).isEqualTo(list.get(i));
+            // when
+            Integer actual = backwardIterator.next();
+
+            // then
+            assertThat(actual).isEqualTo(list.get(i));
         }
     }
 }

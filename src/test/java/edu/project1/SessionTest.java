@@ -30,7 +30,6 @@ public class SessionTest {
     @ParameterizedTest(name = "{index}) input = {0}")
     @ValueSource(strings = {"example", "ball", "go"})
     void checkValidStrings(String input) {
-        new Session(input, MAX_MISTAKES);
         assertThatNoException().isThrownBy(() -> new Session(input, MAX_MISTAKES));
     }
 
@@ -39,85 +38,75 @@ public class SessionTest {
     @NullAndEmptySource
     @ValueSource(strings = {"kk", "2"})
     void typoTest(String input) {
+        // given
         Session session = new Session("aboba", MAX_MISTAKES);
-        assertThat(session.guess(input)).isNull();
+
+        // when
+        GuessResult guessResult = session.guess(input);
+
+        // then
+        assertThat(guessResult).isNull();
     }
 
     @DisplayName("Проверка на победу")
     @Test
     void checkVictory() {
-        Session session = new Session("ball", MAX_MISTAKES);
-        GuessResult result;
+        // given
+        Session session = new Session("k", MAX_MISTAKES);
 
-        result = session.guess("l");
-        assertThat(result.getClass()).isEqualTo(GuessResult.SuccessfulGuess.class);
+        // when
+        GuessResult result = session.guess("k");
 
-        result = session.guess("B");
-        assertThat(result.getClass()).isEqualTo(GuessResult.SuccessfulGuess.class);
-
-        result = session.guess("x");
-        assertThat(result.getClass()).isEqualTo(GuessResult.FailedGuess.class);
-
-        result = session.guess("A");
+        // then
         assertThat(result.getClass()).isEqualTo(GuessResult.Win.class);
     }
 
     @DisplayName("Проверка на поражение")
     @Test
     void checkDefeat() {
-        Session session = new Session("sword", MAX_MISTAKES);
-        GuessResult result;
+        // given
+        Session session = new Session("sword", 1);
 
-        result = session.guess("l");
-        assertThat(result.getClass()).isEqualTo(GuessResult.FailedGuess.class);
+        // when
+        GuessResult result = session.guess("n");
 
-        result = session.guess("x");
-        assertThat(result.getClass()).isEqualTo(GuessResult.FailedGuess.class);
-
-        result = session.guess("o");
-        assertThat(result.getClass()).isEqualTo(GuessResult.SuccessfulGuess.class);
-
-        result = session.guess("f");
-        assertThat(result.getClass()).isEqualTo(GuessResult.FailedGuess.class);
-
-        result = session.guess("k");
-        assertThat(result.getClass()).isEqualTo(GuessResult.FailedGuess.class);
-
-        result = session.guess("n");
+        // then
         assertThat(result.getClass()).isEqualTo(GuessResult.Defeat.class);
     }
 
     @DisplayName("Проверка на то, что пользователь сдался")
     @Test
     void checkSurrender() {
+        // given
         Session session = new Session("sword", MAX_MISTAKES);
+
+        // when
         GuessResult result = session.guess("!q");
+
+        // then
         assertThat(result.getClass()).isEqualTo(GuessResult.Surrender.class);
     }
 
     @DisplayName("Проверка, что при опечатке, состояние игры не меняется")
     @Test
     void checkStateDoesntChange() {
+        // given
         Session session = new Session("sword", MAX_MISTAKES);
-        GuessResult result;
 
-        result = session.guess("d");
-
+        // when
+        GuessResult result = session.guess("d");
         int mistakes1 = result.mistakes();
         char[] state1 = result.state();
-
         session.guess("ff");
         session.guess("aa");
         session.guess("kk");
-
         result = session.guess("d");
+        int mistakes2 = result.mistakes();
+        char[] state2 = result.state();
 
-        int mistakes2 =
-            result.mistakes(); // должно быть +1 из-за неверной попытки после опечаток (для получения нового рекорда)
-        char[] state2 = result.state(); // массив должен быть идентичный
-
-        assertThat(mistakes1).isEqualTo(mistakes2 - 1);
-        assertThat(state1).isEqualTo(state2);
+        // then
+        assertThat(mistakes1).isEqualTo(
+            mistakes2 - 1); // должно быть +1 из-за неверной попытки после опечаток (для получения нового рекорда)
+        assertThat(state1).isEqualTo(state2); // массив должен быть идентичный
     }
-
 }

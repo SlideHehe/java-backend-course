@@ -21,8 +21,14 @@ public class RandomWordTest {
     @DisplayName("Проверка допустимых массивов")
     @ParameterizedTest(name = "{index}) input = {0}")
     @MethodSource("validStringArrayProvider")
-    void checkValidArrays(String[] input) {
-        RandomWords words = new RandomWords(input);
+    void checkValidArrays(
+        // given
+        String[] wordsArray
+    ) {
+        // when
+        RandomWords words = new RandomWords(wordsArray);
+
+        // then
         assertThat(words).isNotNull();
     }
 

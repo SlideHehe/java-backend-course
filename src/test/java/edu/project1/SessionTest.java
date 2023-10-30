@@ -52,7 +52,7 @@ public class SessionTest {
     @Test
     void checkVictory() {
         // given
-        Session session = new Session("k", MAX_MISTAKES);
+        Session session = new Session("kk", MAX_MISTAKES);
 
         // when
         GuessResult result = session.guess("k");

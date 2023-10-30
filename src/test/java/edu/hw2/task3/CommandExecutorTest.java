@@ -40,10 +40,8 @@ public class CommandExecutorTest {
 
         assertThatThrownBy(executor::updatePackages).isInstanceOf(ConnectionException.class);
         assertThatNoException().isThrownBy(executor::updatePackages);
-
         assertThatThrownBy(() -> executor.makeDir("java")).isInstanceOf(ConnectionException.class);
         assertThatNoException().isThrownBy(() -> executor.makeDir("java"));
-
         assertThatThrownBy(() -> executor.installPackage("ffmpeg")).isInstanceOf(ConnectionException.class);
         assertThatNoException().isThrownBy(() -> executor.installPackage("ffmpeg"));
     }

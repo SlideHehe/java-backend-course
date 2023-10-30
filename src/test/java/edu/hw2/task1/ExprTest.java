@@ -23,7 +23,14 @@ public class ExprTest {
     @ParameterizedTest(name = "{index}) input = {0}")
     @ValueSource(doubles = {Double.MAX_VALUE, Double.MIN_VALUE, 0.0})
     void constantValidInput(double value) {
-        assertThat(new Constant(value).evaluate()).isEqualTo(value);
+        //given
+        Constant constant = new Constant(value);
+
+        // when
+        double actual = constant.evaluate();
+
+        // then
+        assertThat(actual).isEqualTo(value);
     }
 
     @DisplayName("Проверка недопустимых аргументов для Negate")
@@ -37,7 +44,15 @@ public class ExprTest {
     @ParameterizedTest(name = "{index}) input = {0}")
     @MethodSource("validNegateProvider")
     void negateValidInput(Expr expr) {
-        assertThat(new Negate(expr).evaluate()).isEqualTo(expr.evaluate() * Expr.NEGATE_NUMBER);
+        // given
+        Negate negate = new Negate(expr);
+
+        // when
+        double actual = negate.evaluate();
+
+        // then
+        double expected = expr.evaluate() * Expr.NEGATE_NUMBER;
+        assertThat(actual).isEqualTo(expected);
     }
 
     static Stream<Arguments> validNegateProvider() {
@@ -68,7 +83,15 @@ public class ExprTest {
     @ParameterizedTest(name = "{index}) input = {0}, {1}")
     @MethodSource("validExponentProvider")
     void exponentValidInput(Expr expr, double value) {
-        assertThat(new Exponent(expr, value).evaluate()).isEqualTo(Math.pow(expr.evaluate(), value));
+        // given
+        Exponent exponent = new Exponent(expr, value);
+
+        // when
+        double actual = exponent.evaluate();
+
+        // then
+        double expected = Math.pow(expr.evaluate(), value);
+        assertThat(actual).isEqualTo(expected);
     }
 
     static Stream<Arguments> validExponentProvider() {
@@ -95,12 +118,34 @@ public class ExprTest {
         );
     }
 
-    @DisplayName("Проверка допустимых аргументов для Multiplication и Addition")
+    @DisplayName("Проверка допустимых аргументов для Multiplication")
     @ParameterizedTest(name = "{index}) input = {0}, {1}")
     @MethodSource("validAddAndMulProvider")
-    void addAndMulValidInput(Expr lhs, Expr rhs) {
-        assertThat(new Addition(lhs, rhs).evaluate()).isEqualTo(lhs.evaluate() + rhs.evaluate());
-        assertThat(new Multiplication(lhs, rhs).evaluate()).isEqualTo(lhs.evaluate() * rhs.evaluate());
+    void mulValidInput(Expr lhs, Expr rhs) {
+        // given
+        Multiplication multiplication = new Multiplication(lhs, rhs);
+
+        // when
+        double actualMul = multiplication.evaluate();
+
+        // then
+        double expectedMul = lhs.evaluate() * rhs.evaluate();
+        assertThat(actualMul).isEqualTo(expectedMul);
+    }
+
+    @DisplayName("Проверка допустимых аргументов для Addition")
+    @ParameterizedTest(name = "{index}) input = {0}, {1}")
+    @MethodSource("validAddAndMulProvider")
+    void addValidInput(Expr lhs, Expr rhs) {
+        // given
+        Addition addition = new Addition(lhs, rhs);
+
+        // when
+        double actualAdd = addition.evaluate();
+
+        // then
+        double expectedAdd = lhs.evaluate() + rhs.evaluate();
+        assertThat(actualAdd).isEqualTo(expectedAdd);
     }
 
     static Stream<Arguments> validAddAndMulProvider() {

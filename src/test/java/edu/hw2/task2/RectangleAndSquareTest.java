@@ -9,39 +9,82 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 public class RectangleAndSquareTest {
-    @DisplayName("Проверка допустимых аргументов Rectangle")
+    @DisplayName("Проверка допустимых аргументов конструктора Rectangle")
     @ParameterizedTest(name = "{index}) input = {0}, {1}")
     @CsvSource({
         "50, 20",
         "30, 1",
         "42, 12"
     })
-    void validRectangleTest(int width, int height) {
+    void validRectangleConstructorTest(int width, int height) {
+        // given
         Rectangle rectangle = new Rectangle(width, height);
-        assertThat(rectangle.area()).isEqualTo(width * height);
 
-        rectangle = new Rectangle(1, 1);
-        assertThat(rectangle.setHeight(height).setWidth(width).area()).isEqualTo(width * height);
+        // when
+        double actualArea = rectangle.area();
+
+        // then
+        assertThat(actualArea).isEqualTo(width * height);
     }
 
-    @DisplayName("Проверка допустимых аргументов Square")
+    @DisplayName("Проверка допустимых аргументов конструктора Square")
     @ParameterizedTest(name = "{index}) input = {0}, {1}")
     @ValueSource(ints = {12, 50, 1245})
-    void validSquareTest(int side) {
+    void validSquareConstructorTest(int side) {
+        // given
         Square square = new Square(side);
-        assertThat(square.area()).isEqualTo(Math.pow(side, 2));
 
-        square = new Square(1);
-        assertThat(square.setSize(side).area()).isEqualTo(Math.pow(side, 2));
+        // when
+        double actualArea = square.area();
+
+        // then
+        assertThat(actualArea).isEqualTo(Math.pow(side, 2));
     }
 
-    @DisplayName("Проверка недопустимых аргументов Rectangle и Square")
+    @DisplayName("Проверка недопустимых аргументов конструкторов Rectangle и Square")
     @ParameterizedTest(name = "{index}) input = {0}, {1}")
     @ValueSource(ints = {0, -1, -50})
-    void invalidRectangleAndSquareTest(int side) {
+    void invalidRectangleAndSquareConstructorTest(int side) {
         assertThatThrownBy(() -> new Rectangle(side, side)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new Square(side)).isInstanceOf(IllegalArgumentException.class);
+    }
 
+    @DisplayName("Проверка допустимых аргументов сеттера Rectangle")
+    @ParameterizedTest(name = "{index}) input = {0}, {1}")
+    @CsvSource({
+        "50, 20",
+        "30, 1",
+        "42, 12"
+    })
+    void validRectangleSetterTest(int width, int height) {
+        // given
+        Rectangle rectangle = new Rectangle(1, 1);
+
+        // when
+        double actualArea = rectangle.setHeight(height).setWidth(width).area();
+
+        // then
+        assertThat(actualArea).isEqualTo(width * height);
+    }
+
+    @DisplayName("Проверка допустимых аргументов сеттера Square")
+    @ParameterizedTest(name = "{index}) input = {0}, {1}")
+    @ValueSource(ints = {12, 50, 1245})
+    void validSquareSetterTest(int side) {
+        // given
+        Square square = new Square(1);
+
+        // when
+        double actualArea = square.setSize(side).area();
+
+        // then
+        assertThat(actualArea).isEqualTo(Math.pow(side, 2));
+    }
+
+    @DisplayName("Проверка недопустимых аргументов сеттеров Rectangle и Square")
+    @ParameterizedTest(name = "{index}) input = {0}, {1}")
+    @ValueSource(ints = {0, -1, -50})
+    void invalidRectangleAndSquareSetterTest(int side) {
         Rectangle rectangle = new Rectangle(1, 1);
         Square square = new Square(1);
 
@@ -54,7 +97,14 @@ public class RectangleAndSquareTest {
     @ParameterizedTest(name = "{index}) input = {0}, {1}")
     @MethodSource("rectangles")
     void substitution(Rectangle rect) {
-        assertThat(rect.setWidth(20).setHeight(10).area()).isEqualTo(200.0);
+        // given
+        Rectangle rectangle = rect.setWidth(20).setHeight(10);
+
+        // when
+        double actualArea = rectangle.area();
+
+        // then
+        assertThat(actualArea).isEqualTo(200.0);
     }
 
     static Arguments[] rectangles() {

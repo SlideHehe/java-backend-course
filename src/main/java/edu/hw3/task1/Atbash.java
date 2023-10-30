@@ -5,9 +5,6 @@ import java.util.Objects;
 import static java.util.Map.entry;
 
 public class Atbash {
-    private Atbash() {
-    }
-
     private static final Map<Character, Character> ATBASH_CIPHER = Map.ofEntries(
         entry('a', 'z'),
         entry('b', 'y'),
@@ -36,6 +33,9 @@ public class Atbash {
         entry('y', 'b'),
         entry('z', 'a')
     );
+
+    private Atbash() {
+    }
 
     public static String atbash(String message) {
         Objects.requireNonNull(message);

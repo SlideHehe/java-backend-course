@@ -22,6 +22,7 @@ public class BackwardIteratorTest {
     @DisplayName("Проверка на передачу null в конструктор BackwardIterator")
     @Test
     void nullArgCheck() {
+        // expect
         assertThatThrownBy(() -> new BackwardIterator<>(null)).isInstanceOf(NullPointerException.class);
     }
 

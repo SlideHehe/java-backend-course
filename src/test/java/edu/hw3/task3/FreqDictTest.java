@@ -50,6 +50,7 @@ public class FreqDictTest {
     @ParameterizedTest
     @MethodSource("stringListProvider")
     void stringListTest(List<String> list, Map<String, Integer> expectedMap) {
+        // expect
         assertThat(FreqDict.freqDict(list)).isEqualTo(expectedMap);
     }
 
@@ -57,6 +58,7 @@ public class FreqDictTest {
     @ParameterizedTest
     @MethodSource("integerListProvider")
     void integerListTest(List<Integer> list, Map<Integer, Integer> expectedMap) {
+        // expect
         assertThat(FreqDict.freqDict(list)).isEqualTo(expectedMap);
     }
 
@@ -64,14 +66,17 @@ public class FreqDictTest {
     @ParameterizedTest
     @NullSource
     void nullListTest(List<Object> list) {
+        // expect
         assertThatThrownBy(() -> FreqDict.freqDict(list)).isInstanceOf(NullPointerException.class);
     }
 
     @DisplayName("Проверка списка String с null")
     @Test
     void stringsWithNullTest() {
+        // given
         List<String> list = Arrays.asList("a", "b", "a", "a", null, null);
 
+        // expect
         assertThatThrownBy(() -> FreqDict.freqDict(list)).isInstanceOf(NullPointerException.class);
     }
 
@@ -79,6 +84,7 @@ public class FreqDictTest {
     @ParameterizedTest
     @EmptySource
     void emptyListTest(List<Object> list) {
+        // expect
         assertThat(FreqDict.freqDict(list)).isEqualTo(Map.of());
     }
 }

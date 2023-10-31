@@ -12,6 +12,7 @@ public class ConverterToRomanTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 4000})
     void invalidValuesTest(int number) {
+        // expect
         assertThatThrownBy(() -> ConverterToRoman.convertToRoman(number)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -25,6 +26,7 @@ public class ConverterToRomanTest {
         "3999, MMMCMXCIX"
     })
     void validValuesTest(int number, String romanNumber) {
+        // expect
         assertThat(ConverterToRoman.convertToRoman(number)).isEqualTo(romanNumber);
     }
 }

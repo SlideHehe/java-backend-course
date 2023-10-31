@@ -29,6 +29,7 @@ public class AtbashTest {
     @ParameterizedTest
     @NullSource
     void nullTest(String input) {
+        // expect
         assertThatThrownBy(() -> Atbash.atbash(input)).isInstanceOf(NullPointerException.class);
     }
 
@@ -36,6 +37,7 @@ public class AtbashTest {
     @ParameterizedTest
     @MethodSource("validStringsProvider")
     void validStringsTest(String input, String expected) {
+        // expect
         assertThat(Atbash.atbash(input)).isEqualTo(expected);
     }
 }

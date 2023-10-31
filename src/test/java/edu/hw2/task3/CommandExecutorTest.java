@@ -13,14 +13,6 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 public class CommandExecutorTest {
-    @DisplayName("Проверка недопустимых аргументов конструктора")
-    @ParameterizedTest(name = "{index}) input = {0}, {1}")
-    @MethodSource("invalidConstructorArgsProvider")
-    void invalidConstructorArgs(ConnectionManager connectionManager, int maxAttempts) {
-        assertThatThrownBy(() -> new PopularCommandExecutor(connectionManager, maxAttempts))
-            .isInstanceOf(IllegalArgumentException.class);
-    }
-
     static Stream<Arguments> invalidConstructorArgsProvider() {
         return Stream.of(
             Arguments.of(null, 2),
@@ -29,15 +21,26 @@ public class CommandExecutorTest {
         );
     }
 
+    @DisplayName("Проверка недопустимых аргументов конструктора")
+    @ParameterizedTest(name = "{index}) input = {0}, {1}")
+    @MethodSource("invalidConstructorArgsProvider")
+    void invalidConstructorArgs(ConnectionManager connectionManager, int maxAttempts) {
+        // expect
+        assertThatThrownBy(() -> new PopularCommandExecutor(connectionManager, maxAttempts))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
     @DisplayName("Проверка FaultyConnectionManager")
     @Test
     void checkFaultyConnectionManager() {
+        // given
         ConnectionManager connectionManager = new FaultyConnectionManager();
         PopularCommandExecutor executor = new PopularCommandExecutor(
             connectionManager,
             1
         ); // При ограничении в 1 попытку, каждая вторая команда будет выкидывать ConnectionException
 
+        // expect
         assertThatThrownBy(executor::updatePackages).isInstanceOf(ConnectionException.class);
         assertThatNoException().isThrownBy(executor::updatePackages);
         assertThatThrownBy(() -> executor.makeDir("java")).isInstanceOf(ConnectionException.class);
@@ -49,6 +52,7 @@ public class CommandExecutorTest {
     @DisplayName("Проверка DefaultConnectionManager")
     @Test
     void checkDefaultConnectionManager() {
+        // given
         ConnectionManager connectionManager = new DefaultConnectionManager();
         PopularCommandExecutor executor = new PopularCommandExecutor(
             connectionManager,
@@ -56,6 +60,7 @@ public class CommandExecutorTest {
         ); // При ограничении в 1 попытку, каждый второй раз будет выдаваться FaultyConnection
         // (который выбрасывает FaultyConnection каждый второй раз) -> каждый 4-ый раз должен ловится exception
 
+        // expect
         assertThatThrownBy(executor::updatePackages).isInstanceOf(ConnectionException.class);
         assertThatNoException().isThrownBy(executor::updatePackages);
         assertThatNoException().isThrownBy(() -> executor.makeDir("java"));
@@ -67,9 +72,11 @@ public class CommandExecutorTest {
     @ParameterizedTest
     @NullAndEmptySource
     void checkInvalidStrings(String input) {
+        // given
         ConnectionManager connectionManager = new DefaultConnectionManager();
         PopularCommandExecutor executor = new PopularCommandExecutor(connectionManager, 5);
 
+        // expect
         assertThatThrownBy(() -> executor.makeDir(input)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> executor.installPackage(input)).isInstanceOf(IllegalArgumentException.class);
     }

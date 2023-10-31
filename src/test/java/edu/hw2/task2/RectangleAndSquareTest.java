@@ -45,6 +45,7 @@ public class RectangleAndSquareTest {
     @ParameterizedTest(name = "{index}) input = {0}, {1}")
     @ValueSource(ints = {0, -1, -50})
     void invalidRectangleAndSquareConstructorTest(int side) {
+        // expect
         assertThatThrownBy(() -> new Rectangle(side, side)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> new Square(side)).isInstanceOf(IllegalArgumentException.class);
     }
@@ -85,9 +86,11 @@ public class RectangleAndSquareTest {
     @ParameterizedTest(name = "{index}) input = {0}, {1}")
     @ValueSource(ints = {0, -1, -50})
     void invalidRectangleAndSquareSetterTest(int side) {
+        // given
         Rectangle rectangle = new Rectangle(1, 1);
         Square square = new Square(1);
 
+        // expect
         assertThatThrownBy(() -> rectangle.setHeight(side)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> rectangle.setWidth(side)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> square.setSize(side)).isInstanceOf(IllegalArgumentException.class);

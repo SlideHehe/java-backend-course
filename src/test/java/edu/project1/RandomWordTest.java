@@ -15,6 +15,7 @@ public class RandomWordTest {
     @ParameterizedTest(name = "{index}) input = {0}")
     @NullAndEmptySource
     void checkNullAndEmptyInput(String[] input) {
+        // expect
         assertThatThrownBy(() -> new RandomWords(input)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -36,6 +37,7 @@ public class RandomWordTest {
     @ParameterizedTest(name = "{index}) input = {0}")
     @MethodSource("invalidStringArrayProvider")
     void checkInvalidArrays(String[] input) {
+        // expect
         assertThatThrownBy(() -> new RandomWords(input)).isInstanceOf(IllegalArgumentException.class);
     }
 

@@ -16,6 +16,7 @@ public class SessionTest {
     @ParameterizedTest(name = "{index}) input = {0}")
     @NullAndEmptySource
     void checkNullAndEmptyInput(String input) {
+        // expect
         assertThatThrownBy(() -> new Session(input, MAX_MISTAKES)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -23,6 +24,7 @@ public class SessionTest {
     @ParameterizedTest(name = "{index}) input = {0}")
     @ValueSource(strings = {"", "a", "te5t"})
     void checkInvalidStrings(String input) {
+        // expect
         assertThatThrownBy(() -> new Session(input, MAX_MISTAKES)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -30,6 +32,7 @@ public class SessionTest {
     @ParameterizedTest(name = "{index}) input = {0}")
     @ValueSource(strings = {"example", "ball", "go"})
     void checkValidStrings(String input) {
+        // expect
         assertThatNoException().isThrownBy(() -> new Session(input, MAX_MISTAKES));
     }
 

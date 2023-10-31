@@ -26,6 +26,7 @@ public class StockMarketTest {
     @ParameterizedTest
     @MethodSource("invalidArgsProvider")
     void invalidValuesTest(String name, double price) {
+        // expect
         assertThatThrownBy(() -> new Stock(name, price)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -33,7 +34,10 @@ public class StockMarketTest {
     @ParameterizedTest
     @NullSource
     void nullStocksTest(Stock stock) {
+        // given
         StockMarket market = new TechStockMarket();
+
+        // expect
         assertThatThrownBy(() -> market.add(stock)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> market.remove(stock)).isInstanceOf(NullPointerException.class);
     }

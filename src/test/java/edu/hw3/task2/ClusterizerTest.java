@@ -27,6 +27,7 @@ public class ClusterizerTest {
     @ParameterizedTest
     @NullSource
     void nullTest(String input) {
+        // expect
         assertThatThrownBy(() -> Clusterizer.clusterize(input)).isInstanceOf(NullPointerException.class);
     }
 
@@ -34,6 +35,7 @@ public class ClusterizerTest {
     @ParameterizedTest
     @EmptySource
     void emptyStringTest(String input) {
+        // expect
         assertThat(Clusterizer.clusterize(input)).containsExactly();
     }
 
@@ -41,6 +43,7 @@ public class ClusterizerTest {
     @ParameterizedTest
     @ValueSource(strings = {"(1), ((), ))(()), ()())(, ()()(, a"})
     void invalidValuesTest(String input) {
+        // expect
         assertThatThrownBy(() -> Clusterizer.clusterize(input)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -48,6 +51,7 @@ public class ClusterizerTest {
     @ParameterizedTest
     @MethodSource("validInputProvider")
     void validInputTest(String input, List<String> expected) {
+        // expect
         assertThat(Clusterizer.clusterize(input)).isEqualTo(expected);
     }
 }

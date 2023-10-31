@@ -50,6 +50,7 @@ public class ParseContactsTest {
     @NullAndEmptySource
     @ValueSource(strings = {"one two three", "\n\t", " "})
     void invalidPersonValuesTest(String person) {
+        // expect
         assertThatThrownBy(() -> Person.of(person)).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -57,6 +58,7 @@ public class ParseContactsTest {
     @ParameterizedTest
     @NullAndEmptySource
     void emptyArrayTest(String[] people) {
+        // expect
         assertThat(ParseContacts.parseContacts(people, "ASC")).containsExactly();
     }
 
@@ -65,7 +67,10 @@ public class ParseContactsTest {
     @NullAndEmptySource
     @ValueSource(strings = {"ABC", "DSC"})
     void invalidParseContactsArgs(String order) {
+        // given
         String[] people = new String[] {"a", "b"};
+
+        // expect
         assertThatThrownBy(
             () -> ParseContacts.parseContacts(people, order)
         ).isInstanceOf(IllegalArgumentException.class);
@@ -75,6 +80,7 @@ public class ParseContactsTest {
     @ParameterizedTest
     @MethodSource("parseContactValuesProvider")
     void parseContactValuesTest(String[] people, String order, Person[] expected) {
+        // expect
         assertThat(ParseContacts.parseContacts(people, order)).isEqualTo(expected);
     }
 

@@ -8,6 +8,8 @@ import static edu.project2.Utils.validateMaze;
 
 public class UglyRenderer implements Renderer {
     private static final char PATH_SYMBOL = '●';
+    private static final char PASSAGE_SYMBOL = ' ';
+    private static final char WALL_SYMBOL = '█';
 
     @Override
     public String render(Maze maze) {
@@ -20,9 +22,9 @@ public class UglyRenderer implements Renderer {
             for (int col = 0; col < maze.width(); col++) {
                 Cell currentCell = grid[row][col];
                 if (currentCell.equals(Cell.PASSAGE)) {
-                    stringBuilder.append(' ');
+                    stringBuilder.append(PASSAGE_SYMBOL);
                 } else if (currentCell.equals(Cell.WALL)) {
-                    stringBuilder.append('█');
+                    stringBuilder.append(WALL_SYMBOL);
                 }
             }
             stringBuilder.append('\n');

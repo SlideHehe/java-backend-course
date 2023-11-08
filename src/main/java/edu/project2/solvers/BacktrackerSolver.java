@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import static edu.project2.solvers.SolverUtils.isValidMove;
-import static edu.project2.solvers.SolverUtils.validateGenerateArgs;
+import static edu.project2.solvers.SolverUtils.validateSolverArgs;
 
 public class BacktrackerSolver implements Solver {
     private final Stack<Coordinate> stack = new Stack<>();
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
-        validateGenerateArgs(maze, start, end);
+        validateSolverArgs(maze, start, end);
 
         stack.clear();
         List<Coordinate> path = new ArrayList<>();

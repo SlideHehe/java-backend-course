@@ -10,7 +10,7 @@ class SolverUtils {
     private SolverUtils() {
     }
 
-    static void validateGenerateArgs(Maze maze, Coordinate start, Coordinate end) {
+    static void validateSolverArgs(Maze maze, Coordinate start, Coordinate end) {
         validateMaze(maze);
         validateCoordinates(maze, start, end);
     }

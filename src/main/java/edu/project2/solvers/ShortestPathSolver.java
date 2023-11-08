@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import static edu.project2.solvers.SolverUtils.isValidMove;
-import static edu.project2.solvers.SolverUtils.validateGenerateArgs;
+import static edu.project2.solvers.SolverUtils.validateSolverArgs;
 
 public class ShortestPathSolver implements Solver {
     private final Queue<Coordinate> queue = new ArrayDeque<>();
@@ -20,7 +20,7 @@ public class ShortestPathSolver implements Solver {
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
-        validateGenerateArgs(maze, start, end);
+        validateSolverArgs(maze, start, end);
 
         queue.clear();
         parentMap.clear();

@@ -35,16 +35,16 @@ public class UglyRenderer implements Renderer {
 
     @Override
     public String render(Maze maze, List<Coordinate> path) {
-        StringBuilder stringBuilder = new StringBuilder(render(maze));
+        char[] renderedMaze = render(maze).toCharArray();
         int width = maze.width();
 
         for (Coordinate coordinate : path) {
             int row = coordinate.row();
             int col = coordinate.col();
 
-            stringBuilder.setCharAt((row * (width + 1) + col), PATH_SYMBOL);
+            renderedMaze[row * (width + 1) + col] = PATH_SYMBOL;
         }
 
-        return stringBuilder.toString();
+        return String.valueOf(renderedMaze);
     }
 }

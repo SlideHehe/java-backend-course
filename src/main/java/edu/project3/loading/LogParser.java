@@ -13,7 +13,7 @@ public class LogParser {
     private static final Pattern PATTERN = Pattern.compile(
         "^(.*) - (.+) \\[(.+)] \"([A-Z]+) (.+) (HTTP/\\d.\\d)\" (\\d{3}) (\\d+) \"(.+)\" \"(.+)\"$"
     );
-    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+    public static final DateTimeFormatter DATE_TIME_FORMATTER =
         DateTimeFormatter.ofPattern("dd/LLL/yyyy:HH:mm:ss Z").withLocale(Locale.ENGLISH);
     private static final int REMOTE_ADDR_GROUP = 1;
     private static final int REMOTE_USER_GROUP = 2;

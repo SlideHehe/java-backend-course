@@ -113,7 +113,7 @@ public class ReportPrinter {
         stringBuilder.append(TABLE_SEPARATOR)
             .append("Средний размер ответа")
             .append(TABLE_SEPARATOR)
-            .append("%.0f".formatted(logReport.getAverageRequestSize()))
+            .append("%.0f".formatted(logReport.getAverageResponseSize()))
             .append("b")
             .append(System.lineSeparator());
     }

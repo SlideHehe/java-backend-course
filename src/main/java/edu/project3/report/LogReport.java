@@ -52,7 +52,7 @@ public class LogReport {
         return logRecordSupplier.get().count();
     }
 
-    public double getAverageRequestSize() {
+    public double getAverageResponseSize() {
         return logRecordSupplier.get()
             .mapToLong(LogRecord::bytesSent)
             .average()

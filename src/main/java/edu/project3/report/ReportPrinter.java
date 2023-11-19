@@ -13,6 +13,9 @@ import java.util.stream.Stream;
 
 public class ReportPrinter {
     private static final int LIMIT = 3;
+    private static final String MARKDOWN = "markdown";
+    private static final String MD = "md";
+    private static final String ADOC = "adoc";
     private static final String MARKDOWN_TWO_COLUMNS_TABLE_HEADER = "--- | ---";
     private static final String MARKDOWN_THREE_COLUMNS_TABLE_HEADER = "--- | --- | ---";
     private static final String ADOC_TABLE_HEADER = "|====";
@@ -24,10 +27,10 @@ public class ReportPrinter {
     public ReportPrinter(LogReport logReport) {
         Objects.requireNonNull(logReport);
 
-        String format = logReport.getCliInput().format();
+        String formatName = logReport.getCliInput().format();
 
-        this.format = format.equals("markdown") ? "md" : "adoc";
-        this.titleLabel = format.equals("markdown") ? "###" : "===";
+        this.format = formatName.equals(MARKDOWN) ? MD : ADOC;
+        this.titleLabel = formatName.equals(MARKDOWN) ? "###" : "===";
         this.logReport = logReport;
     }
 
@@ -49,60 +52,70 @@ public class ReportPrinter {
 
         genInfoTable.append(titleLabel).append(" Общая информация").append(System.lineSeparator());
 
-        if (format.equals("md")) {
-            genInfoTable.append("| Метрика | Значение").append(System.lineSeparator());
+        String columnNames = "| Метрика | Значение";
+        if (format.equals(MD)) {
+            genInfoTable.append(columnNames).append(System.lineSeparator());
             genInfoTable.append(MARKDOWN_TWO_COLUMNS_TABLE_HEADER).append(System.lineSeparator());
         } else {
             genInfoTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
-            genInfoTable.append("| Метрика | Значение").append(System.lineSeparator());
+            genInfoTable.append(columnNames).append(System.lineSeparator());
         }
 
+        addFilesToMetrics(genInfoTable);
+        addDatesToMetrics(genInfoTable);
+        addNumberOfRequestsAndAverageResponseSizeToMetrics(genInfoTable);
+
+        if (format.equals(ADOC)) {
+            genInfoTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
+        }
+
+        return genInfoTable.toString();
+    }
+
+    private void addFilesToMetrics(StringBuilder stringBuilder) {
         List<String> paths = getPathNames();
         assert paths != null;
 
-        genInfoTable.append(TABLE_SEPARATOR)
+        stringBuilder.append(TABLE_SEPARATOR)
             .append("Файл(-ы)")
             .append(TABLE_SEPARATOR)
             .append(paths.get(0))
             .append(System.lineSeparator());
 
         for (int i = 1; i < paths.size(); i++) {
-            genInfoTable.append(TABLE_SEPARATOR)
+            stringBuilder.append(TABLE_SEPARATOR)
                 .append(".")
                 .append(TABLE_SEPARATOR)
                 .append(paths.get(i))
                 .append(System.lineSeparator());
         }
+    }
 
-        genInfoTable.append(TABLE_SEPARATOR)
+    private void addDatesToMetrics(StringBuilder stringBuilder) {
+        stringBuilder.append(TABLE_SEPARATOR)
             .append("Начальная дата")
             .append(TABLE_SEPARATOR)
             .append(logReport.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
             .append(System.lineSeparator());
-        genInfoTable.append(TABLE_SEPARATOR)
+        stringBuilder.append(TABLE_SEPARATOR)
             .append("Конечная дата")
             .append(TABLE_SEPARATOR)
             .append(logReport.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
             .append(System.lineSeparator());
+    }
 
-        genInfoTable.append(TABLE_SEPARATOR)
+    private void addNumberOfRequestsAndAverageResponseSizeToMetrics(StringBuilder stringBuilder) {
+        stringBuilder.append(TABLE_SEPARATOR)
             .append("Количество запросов")
             .append(TABLE_SEPARATOR)
             .append(logReport.getNumberOfRequests())
             .append(System.lineSeparator());
-        genInfoTable.append(TABLE_SEPARATOR)
+        stringBuilder.append(TABLE_SEPARATOR)
             .append("Средний размер ответа")
             .append(TABLE_SEPARATOR)
             .append("%.0f".formatted(logReport.getAverageRequestSize()))
             .append("b")
             .append(System.lineSeparator());
-
-
-        if (format.equals("adoc")) {
-            genInfoTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
-        }
-
-        return genInfoTable.toString();
     }
 
     private List<String> getPathNames() {
@@ -127,12 +140,13 @@ public class ReportPrinter {
 
         resourcesTable.append(titleLabel).append(" Запрашиваемые ресурсы").append(System.lineSeparator());
 
-        if (format.equals("md")) {
-            resourcesTable.append("| Ресурс | Количество").append(System.lineSeparator());
+        String columnNames = "| Ресурс | Количество";
+        if (format.equals(MD)) {
+            resourcesTable.append(columnNames).append(System.lineSeparator());
             resourcesTable.append(MARKDOWN_TWO_COLUMNS_TABLE_HEADER).append(System.lineSeparator());
         } else {
             resourcesTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
-            resourcesTable.append("| Ресурс | Количество").append(System.lineSeparator());
+            resourcesTable.append(columnNames).append(System.lineSeparator());
         }
 
         for (var entry : resources.entrySet()) {
@@ -143,7 +157,7 @@ public class ReportPrinter {
                 .append(System.lineSeparator());
         }
 
-        if (format.equals("adoc")) {
+        if (format.equals(ADOC)) {
             resourcesTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
         }
 
@@ -156,27 +170,26 @@ public class ReportPrinter {
 
         codesTable.append(titleLabel).append(" Коды ответа").append(System.lineSeparator());
 
-        if (format.equals("md")) {
-            codesTable.append("| Код | Имя | Количество").append(System.lineSeparator());
+        String columnNames = "| Код | Имя | Количество";
+        if (format.equals(MD)) {
+            codesTable.append(columnNames).append(System.lineSeparator());
             codesTable.append(MARKDOWN_THREE_COLUMNS_TABLE_HEADER).append(System.lineSeparator());
         } else {
             codesTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
-            codesTable.append("| Код | Имя | Количество").append(System.lineSeparator());
+            codesTable.append(columnNames).append(System.lineSeparator());
         }
-
 
         for (var entry : codes.entrySet()) {
             codesTable.append(TABLE_SEPARATOR)
                 .append(entry.getKey())
                 .append(TABLE_SEPARATOR)
-                .append(LookupTable.STATUS_CODES.get(entry.getKey()))
+                .append(LookupTable.getCode(entry.getKey()))
                 .append(TABLE_SEPARATOR)
                 .append(entry.getValue())
                 .append(System.lineSeparator());
         }
 
-
-        if (format.equals("adoc")) {
+        if (format.equals(ADOC)) {
             codesTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
         }
 

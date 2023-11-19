@@ -1,5 +1,7 @@
 package edu.project3.cliargs;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -25,7 +27,6 @@ public class CliInputParser {
 
         return cliInput;
     }
-
 
     private static CliInput getArgs(String[] args) {
         String path = null;
@@ -76,7 +77,9 @@ public class CliInputParser {
 
     private static ZonedDateTime getDateFromString(String date) {
         try {
-            return ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE);
+            return LocalDate
+                .parse(date, DateTimeFormatter.ISO_LOCAL_DATE)
+                .atStartOfDay(ZoneId.systemDefault());
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Date was provided in wrong format");
         }

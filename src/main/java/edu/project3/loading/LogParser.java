@@ -2,7 +2,6 @@ package edu.project3.loading;
 
 import edu.project3.record.LogRecord;
 import edu.project3.record.Request;
-import edu.project3.report.LogReport;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;

@@ -15,29 +15,29 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LogLoader {
     private static final String ERROR_MSG_FROM_URI = "Unable to get logs from URI";
     private static final String ERROR_MSG_FROM_GLOB = "Unable to get logs from glob";
 
+    private LogLoader() {
+    }
+
     public static List<LogRecord> loadLogs(CliInput cliInput) {
         Stream<LogRecord> logRecordStream;
 
         if (cliInput.path().startsWith("http")) {
-            URI uri = URI.create(cliInput.path());
-            logRecordStream = loadLogsFromUri(uri);
-        } else {
-            logRecordStream = loadLogsFromGlob(cliInput.path());
+            return loadLogsFromUri(cliInput);
         }
 
-        return logRecordStream
-            .filter(Objects::nonNull)
-            .filter(logRecord -> filterWithDate(logRecord, cliInput))
-            .toList();
+        return loadLogsFromGlob(cliInput);
     }
 
-    private static Stream<LogRecord> loadLogsFromUri(URI uri) {
+    private static List<LogRecord> loadLogsFromUri(CliInput cliInput) {
+        URI uri = URI.create(cliInput.path());
+
         HttpRequest httpRequest = HttpRequest.newBuilder()
             .uri(uri)
             .GET()
@@ -48,29 +48,32 @@ public class LogLoader {
             String logs = resp.body();
 
             return Arrays.stream(logs.split("\n"))
-                .map(LogParser::parseLog);
+                .map(LogParser::parseLog)
+                .filter(Objects::nonNull)
+                .filter(logRecord -> filterWithDate(logRecord, cliInput))
+                .collect(Collectors.toList());
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(ERROR_MSG_FROM_URI);
         }
     }
 
-    private static Stream<LogRecord> loadLogsFromGlob(String glob) {
-        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + glob);
+    private static List<LogRecord> loadLogsFromGlob(CliInput cliInput) {
+        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + cliInput.path());
         try (Stream<Path> walkedFiles = Files.walk(Paths.get(""))) {
             return walkedFiles
                 .filter(pathMatcher::matches)
-                .flatMap(LogLoader::loadLogsFromFile);
-        } catch (IOException e) {
-            throw new RuntimeException(ERROR_MSG_FROM_GLOB);
-        }
-    }
-
-    private static Stream<LogRecord> loadLogsFromFile(Path path) {
-        try (Stream<String> lines = Files.lines(path)) {
-            return lines
-                .map(LogParser::parseLog);
-
+                .flatMap(path -> {
+                    try (Stream<String> linesStream = Files.lines(path)) {
+                        List<LogRecord> linesList = linesStream.map(LogParser::parseLog).toList();
+                        return linesList.stream();
+                    } catch (IOException e) {
+                        throw new RuntimeException(ERROR_MSG_FROM_GLOB);
+                    }
+                })
+                .filter(Objects::nonNull)
+                .filter(logRecord -> filterWithDate(logRecord, cliInput))
+                .toList();
         } catch (IOException e) {
             throw new RuntimeException(ERROR_MSG_FROM_GLOB);
         }

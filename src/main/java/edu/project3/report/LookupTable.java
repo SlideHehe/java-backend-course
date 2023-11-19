@@ -5,7 +5,7 @@ import java.util.Map;
 
 @SuppressWarnings("MagicNumber")
 public class LookupTable {
-    public static final Map<Integer, String> STATUS_CODES = new HashMap<>();
+    private static final Map<Integer, String> STATUS_CODES = new HashMap<>();
 
     static {
         STATUS_CODES.put(100, "Continue");
@@ -70,5 +70,16 @@ public class LookupTable {
         STATUS_CODES.put(508, "Loop Detected");
         STATUS_CODES.put(510, "Not Extended");
         STATUS_CODES.put(511, "Network Authentication Required");
+    }
+
+    private LookupTable() {
+    }
+
+    public static String getCode(int code) {
+        if (!STATUS_CODES.containsKey(code)) {
+            throw new RuntimeException("Unknown status code");
+        }
+
+        return STATUS_CODES.get(code);
     }
 }

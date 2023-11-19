@@ -2,6 +2,7 @@ package edu.project3.report;
 
 import edu.project3.cliargs.CliInput;
 import edu.project3.record.LogRecord;
+import edu.project3.record.Request;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -59,7 +60,7 @@ public class LogReport {
             .orElse(0.0);
     }
 
-    public <T> Map<T, Long> getMostFrequentMetrics(Function<LogRecord, T> keyExtractor, long limit) {
+    private  <T> Map<T, Long> getMostFrequentMetrics(Function<LogRecord, T> keyExtractor, long limit) {
         return logRecordSupplier.get()
             .collect(Collectors.groupingBy(keyExtractor, Collectors.counting()))
             .entrySet().stream()
@@ -68,7 +69,7 @@ public class LogReport {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
     }
 
-    public <T> Map<T, Long> getMostFrequentMetrics(Function<LogRecord, T> keyExtractor) {
+    private  <T> Map<T, Long> getMostFrequentMetrics(Function<LogRecord, T> keyExtractor) {
         return getMostFrequentMetrics(keyExtractor, Long.MAX_VALUE);
     }
 
@@ -86,5 +87,23 @@ public class LogReport {
 
     public Map<String, Long> getMostFrequentResources() {
         return getMostFrequentMetrics(logRecord -> logRecord.request().resource());
+    }
+
+    // Добавление доп. статистик
+
+    public Map<Request.Method, Long> getMostFrequentRequestMethods(long limit) {
+        return getMostFrequentMetrics(logRecord -> logRecord.request().requestMethod(), limit);
+    }
+
+    public Map<Request.Method, Long> getMostFrequentRequestMethods() {
+        return getMostFrequentMetrics(logRecord -> logRecord.request().requestMethod());
+    }
+
+    public Map<Request.Version, Long> getMostFrequentHttpVersion(long limit) {
+        return getMostFrequentMetrics(logRecord -> logRecord.request().version(), limit);
+    }
+
+    public Map<Request.Version, Long> getMostFrequentHttpVersion() {
+        return getMostFrequentMetrics(logRecord -> logRecord.request().version());
     }
 }

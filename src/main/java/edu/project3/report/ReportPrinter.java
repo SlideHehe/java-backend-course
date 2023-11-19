@@ -8,6 +8,7 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -44,7 +45,11 @@ public class ReportPrinter {
     }
 
     private String generateContent() {
-        return generateGeneralInfo() + generateMostRequestedResources() + generateMostCommonCodes();
+        return generateGeneralInfo()
+            + generateMostRequestedResources()
+            + generateMostCommonCodes()
+            + generateMostRequestedMethods()
+            + generateMostFrequentHttpVersions();
     }
 
     private String generateGeneralInfo() {
@@ -134,36 +139,6 @@ public class ReportPrinter {
         }
     }
 
-    private String generateMostRequestedResources() {
-        var resources = logReport.getMostFrequentResources(LIMIT);
-        StringBuilder resourcesTable = new StringBuilder();
-
-        resourcesTable.append(titleLabel).append(" Запрашиваемые ресурсы").append(System.lineSeparator());
-
-        String columnNames = "| Ресурс | Количество";
-        if (format.equals(MD)) {
-            resourcesTable.append(columnNames).append(System.lineSeparator());
-            resourcesTable.append(MARKDOWN_TWO_COLUMNS_TABLE_HEADER).append(System.lineSeparator());
-        } else {
-            resourcesTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
-            resourcesTable.append(columnNames).append(System.lineSeparator());
-        }
-
-        for (var entry : resources.entrySet()) {
-            resourcesTable.append(TABLE_SEPARATOR)
-                .append(entry.getKey())
-                .append(TABLE_SEPARATOR)
-                .append(entry.getValue())
-                .append(System.lineSeparator());
-        }
-
-        if (format.equals(ADOC)) {
-            resourcesTable.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
-        }
-
-        return resourcesTable.toString();
-    }
-
     private String generateMostCommonCodes() {
         var codes = logReport.getMostFrequentStatusCodes(LIMIT);
         StringBuilder codesTable = new StringBuilder();
@@ -194,5 +169,57 @@ public class ReportPrinter {
         }
 
         return codesTable.toString();
+    }
+
+    private String generateMostRequestedResources() {
+        return addDoubleColumnTable(
+            logReport.getMostFrequentResources(LIMIT),
+            " Запрашиваемые ресурсы",
+            "| Ресурс | Количество"
+        );
+    }
+
+    private String generateMostRequestedMethods() {
+        return addDoubleColumnTable(
+            logReport.getMostFrequentRequestMethods(),
+            " Методы запросов",
+            "| Метод | Количество"
+        );
+    }
+
+    private String generateMostFrequentHttpVersions() {
+        return addDoubleColumnTable(
+            logReport.getMostFrequentHttpVersion(),
+            " Версии HTTP",
+            "| Версия | Количество"
+        );
+    }
+
+    private <K, V> String addDoubleColumnTable(Map<K, V> table, String header, String columnNames) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(titleLabel).append(header).append(System.lineSeparator());
+
+        if (format.equals(MD)) {
+            stringBuilder.append(columnNames).append(System.lineSeparator());
+            stringBuilder.append(MARKDOWN_TWO_COLUMNS_TABLE_HEADER).append(System.lineSeparator());
+        } else {
+            stringBuilder.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
+            stringBuilder.append(columnNames).append(System.lineSeparator());
+        }
+
+        for (var entry : table.entrySet()) {
+            stringBuilder.append(TABLE_SEPARATOR)
+                .append(entry.getKey())
+                .append(TABLE_SEPARATOR)
+                .append(entry.getValue())
+                .append(System.lineSeparator());
+        }
+
+        if (format.equals(ADOC)) {
+            stringBuilder.append(ADOC_TABLE_HEADER).append(System.lineSeparator());
+        }
+
+        return stringBuilder.toString();
     }
 }

@@ -39,7 +39,7 @@ class ReportPrinterTest {
             createLogRecord("192.168.0.1", "17/May/2015:08:05:32 +0000", "/downloads/product_1", 304, 0, "-"),
             createLogRecord("93.180.71.3", "17/May/2015:08:05:32 +0000", "/downloads/product_2", 200, 4, "-")
         );
-        CliInput cliInput = new CliInput("src/**/*.txt", null, null, format);
+        CliInput cliInput = new CliInput("src/**/*.log", null, null, format);
         LogReport logReport = new LogReport(logRecords, cliInput);
         ReportPrinter reportPrinter = new ReportPrinter(logReport);
 

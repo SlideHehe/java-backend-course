@@ -12,7 +12,7 @@ class LogLoaderTest {
 
     private static final String VALID_URI =
         "https://raw.githubusercontent.com/elastic/examples/master/Common%20Data%20Formats/nginx_logs/nginx_logs";
-    private static final String VALID_GLOB = "src/**/*.txt";
+    private static final String VALID_GLOB = "src/**/*.log";
 
     @Test
     @DisplayName("Получение логов с рабочей ссылки по http")

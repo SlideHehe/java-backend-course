@@ -42,7 +42,6 @@ public class FiltersTest {
         assertThatThrownBy(() -> filter.and(null)).isInstanceOf(NullPointerException.class);
     }
 
-
     @Test
     @DisplayName("Передача null в globMatches")
     void globMatchesNullPtrEx() {
@@ -95,7 +94,7 @@ public class FiltersTest {
 
         // then
         assertThat(filteredPaths).doesNotContain(paths.get(0));
-        assertThat(filteredPaths).containsExactly(paths.get(1), paths.get(2));
+        assertThat(filteredPaths).containsExactlyInAnyOrder(paths.get(1), paths.get(2));
     }
 
     @AfterAll

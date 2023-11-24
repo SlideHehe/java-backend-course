@@ -21,7 +21,7 @@ public class ReadWriteLockPersonDatabase implements PersonDatabase {
     private final Map<String, Set<Integer>> phoneIndex = new HashMap<>();
 
     @Override
-    public synchronized void add(Person person) {
+    public void add(Person person) {
         Objects.requireNonNull(person);
 
         if (!isPersonValid(person)) {
@@ -60,7 +60,7 @@ public class ReadWriteLockPersonDatabase implements PersonDatabase {
     }
 
     @Override
-    public synchronized void delete(int id) {
+    public void delete(int id) {
         try {
             writeLock.lock();
 
@@ -79,7 +79,7 @@ public class ReadWriteLockPersonDatabase implements PersonDatabase {
     }
 
     @Override
-    public synchronized List<Person> findByName(String name) {
+    public List<Person> findByName(String name) {
         Objects.requireNonNull(name);
 
         try {
@@ -98,7 +98,7 @@ public class ReadWriteLockPersonDatabase implements PersonDatabase {
     }
 
     @Override
-    public synchronized List<Person> findByAddress(String address) {
+    public List<Person> findByAddress(String address) {
         Objects.requireNonNull(address);
 
         try {
@@ -117,7 +117,7 @@ public class ReadWriteLockPersonDatabase implements PersonDatabase {
     }
 
     @Override
-    public synchronized List<Person> findByPhone(String phone) {
+    public List<Person> findByPhone(String phone) {
         Objects.requireNonNull(phone);
 
         try {

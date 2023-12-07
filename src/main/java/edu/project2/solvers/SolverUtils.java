@@ -6,11 +6,11 @@ import edu.project2.mazecomponents.Maze;
 import java.util.Objects;
 import static edu.project2.Utils.validateMaze;
 
-class SolverUtils {
+public class SolverUtils {
     private SolverUtils() {
     }
 
-    static void validateSolverArgs(Maze maze, Coordinate start, Coordinate end) {
+    public static void validateSolverArgs(Maze maze, Coordinate start, Coordinate end) {
         validateMaze(maze);
         validateCoordinates(maze, start, end);
     }
@@ -24,7 +24,7 @@ class SolverUtils {
         }
     }
 
-    static boolean isValidMove(Maze maze, Coordinate coordinate) {
+    public static boolean isValidMove(Maze maze, Coordinate coordinate) {
         return coordinate.row() >= 0
             && coordinate.row() < maze.height()
             && coordinate.col() >= 0
